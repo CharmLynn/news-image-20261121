@@ -1,64 +1,57 @@
-# news-image-20261121
+# The World in One Day — Saturday, 21 November 2026
 
 [![make.fun · news-image-20261121](https://make.fun/badge/news-image-20261121.svg)](https://make.fun/bounty/news-image-20261121?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261121)
 [![rank](https://make.fun/badge/news-image-20261121/CharmLynn/news-image-20261121/rank.svg)](https://make.fun/bounty/news-image-20261121/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261121)
 [![reward](https://make.fun/badge/news-image-20261121/CharmLynn/news-image-20261121/reward.svg)](https://make.fun/bounty/news-image-20261121?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261121)
 
-One 1024×1024 newspaper front page summing up the world news of
-21 November 2026: a lead story up top, four more in a grid below,
-and the sources in the footer. Everything on it was drawn by code.
+A single 1024×1024 front page for 21 November 2026: one lead story
+in a coloured panel, four more stories on cards, and the sources
+along the bottom. The whole page is drawn by code — no photographs,
+no pasted-in artwork.
 
-## The five stories
+## What happened that day
 
-**COP31 talks run into overtime in Antalya** — the lead.
-Negotiators miss the Friday deadline, deadlocked over a draft deal
-with no mention of fossil fuels; a third text is due on Saturday.
-(Hürriyet Daily News; Al Jazeera; Reuters.)
+- **COP31 talks run into overtime in Antalya.** The climate
+  conference misses its Friday deadline: nearly 200 countries are
+  deadlocked over a draft deal that says nothing about fossil
+  fuels, and a third text is due on Saturday. Sources: Hürriyet
+  Daily News, Al Jazeera, Reuters.
+- **Mexico captures "El Chapo Isidro".** Army special forces seize
+  Fausto Isidro Meza Flores, one of the FBI's ten most wanted, in
+  Guasave, Sinaloa. Four soldiers and seven gunmen die in the raid.
+  Sources: Reuters, AP, NPR.
+- **Russian strike hits Zelensky's home city.** Ballistic missiles
+  strike Kryvyi Rih on Friday night, killing a 7-year-old boy and
+  a 20-year-old woman and wounding 60 people. Sources: AP, Al
+  Jazeera.
+- **Drones set Russian cargo ship ablaze.** The Sparta II, sailing
+  for Kaliningrad, is hit in the Gulf of Finland and catches fire;
+  all 16 crew are evacuated as the ship drifts into Finnish waters.
+  Sources: Reuters, Al Jazeera, CNN.
+- **Mosquitoes cut dengue by 69% in Brazil trial.** In Belo
+  Horizonte, schoolchildren in neighbourhoods with Wolbachia-carrying
+  mosquitoes caught far less dengue and chikungunya, researchers
+  report. Sources: AP, The Straits Times.
 
-**Mexico captures "El Chapo Isidro".**
-Special forces seize FBI most-wanted Fausto Isidro Meza Flores in
-Guasave; four soldiers and seven gunmen are killed in the raid.
-(Reuters; AP; NPR.)
+Every story above happened, or was first reported, on 21 November
+2026.
 
-**Russian strike hits Zelensky's home city.**
-Ballistic missiles hit Kryvyi Rih on Friday night; a boy of 7 and
-a woman of 20 are killed and 60 people are wounded. (AP; Al Jazeera.)
+## How it is built
 
-**Drones set Russian cargo ship ablaze.**
-The Sparta II, bound for Kaliningrad, is hit in the Gulf of Finland;
-its crew of 16 is evacuated as it drifts into Finnish waters.
-(Reuters; Al Jazeera; CNN.)
-
-**Mosquitoes cut dengue by 69% in Brazil trial.**
-Wolbachia-carrying mosquitoes cut dengue and chikungunya in
-schoolchildren in Belo Horizonte, researchers report. (AP; The
-Straits Times.)
-
-Each story happened, or was first reported, on 21 November 2026.
-
-## Files
-
-- `draw.py` — draws `entry.png` with Pillow: paper background,
-  serif headlines, flat glyphs, all lettering rendered by code.
-  Run it twice and the file comes out byte-identical.
-- `entry.png` — the finished front page, 1024×1024 pixels.
-- `main.py` — the entry program (Python 3.13, standard library
-  only). It copies `entry.png` to `$MAKEFUN_OUTPUT_DIR/entry.png`
-  (`/output` inside the grader) and reads it back to check the
-  copy, so both grader runs produce the same bytes.
-- `LICENSE` — MIT.
-
-## Run it
+`draw.py` paints `entry.png` with Pillow: a paper background, serif
+headlines, and five small flat icons drawn from scratch. Running it
+twice gives byte-identical output. `main.py` (Python 3.13, standard
+library only) copies that image to `$MAKEFUN_OUTPUT_DIR/entry.png`
+— `/output` in the grader — and checks the copy's SHA-256, so the
+grader's two runs agree. `LICENSE` is MIT.
 
 ```sh
-python3 draw.py        # renders entry.png
+python3 draw.py        # render entry.png
 mkdir -p out && MAKEFUN_OUTPUT_DIR=out python3 main.py
 ```
 
-## Gate check
-
-- PNG, 1024×1024 pixels, well under the 1 MiB limit.
-- No network access and no third-party packages at run time.
+The finished PNG is 1024×1024 pixels and well under the 1 MiB cap;
+the program needs no network and no third-party packages.
 
 ---
 

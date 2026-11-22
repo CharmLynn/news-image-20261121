@@ -1,47 +1,60 @@
 #!/usr/bin/env python3
-"""Copy the finished front page for 21 November 2026 to the output dir.
+"""Ship the finished front page for 21 November 2026.
 
-The entry program for the make.fun news-image-20261121 bounty. It
-uses only the Python standard library, touches no network, and writes
-the same bytes on every run, because entry.png is a fixed file shipped
-in this repository. The grader runs it twice; both runs must agree.
+This is the entry program for make.fun's news-image-20261121 bounty.
+It needs nothing but the Python standard library: it takes the
+entry.png that lives next to it in this repository and puts an exact
+copy at $MAKEFUN_OUTPUT_DIR/entry.png (or /output when the variable
+is unset, which is where the grader looks). No network, no randomness,
+no third-party code, so the grader's two runs write identical bytes.
 
-After copying, it reads the output back and checks the bytes match,
-so a short write would fail loudly instead of passing silently.
+The copy is checked with a SHA-256 digest before and after the copy,
+so a truncated or garbled write fails loudly instead of slipping
+through silently.
 
-Outside the grader, MAKEFUN_OUTPUT_DIR stands in for /output:
+Try it locally with:
 
     mkdir -p out && MAKEFUN_OUTPUT_DIR=out python3 main.py
 """
 
+import hashlib
 import os
+import shutil
 import sys
 from pathlib import Path
 
-OUT_ENV = "MAKEFUN_OUTPUT_DIR"
-DEFAULT_OUT = "/output"
-IMAGE_NAME = "entry.png"
+SOURCE_NAME = "entry.png"
+OUTPUT_VARIABLE = "MAKEFUN_OUTPUT_DIR"
+FALLBACK_DIRECTORY = "/output"
 
 
-def entry_bytes():
-    """Read the finished front page from beside this file."""
+def digest_of(path):
+    """Return the SHA-256 hex digest of a file's bytes."""
+    hasher = hashlib.sha256()
+    with open(path, "rb") as handle:
+        for chunk in iter(lambda: handle.read(65536), b""):
+            hasher.update(chunk)
+    return hasher.hexdigest()
+
+
+def run():
+    """Copy entry.png into the output directory and verify it."""
     here = Path(__file__).resolve().parent
-    return (here / IMAGE_NAME).read_bytes()
-
-
-def main():
-    """Copy entry.png to the output dir and verify the copy."""
-    dest = Path(os.environ.get(OUT_ENV, DEFAULT_OUT))
-    dest.mkdir(parents=True, exist_ok=True)
-    data = entry_bytes()
-    target = dest / IMAGE_NAME
-    target.write_bytes(data)
-    if target.read_bytes() != data:
-        print(f"error: {IMAGE_NAME} did not copy cleanly", file=sys.stderr)
+    source = here / SOURCE_NAME
+    wanted = digest_of(source)
+    out_dir = Path(os.environ.get(OUTPUT_VARIABLE, FALLBACK_DIRECTORY))
+    out_dir.mkdir(parents=True, exist_ok=True)
+    target = out_dir / SOURCE_NAME
+    shutil.copyfile(source, target)
+    got = digest_of(target)
+    if got != wanted:
+        print(f"error: {SOURCE_NAME} copy mismatch: {got} != {wanted}",
+              file=sys.stderr)
         return 1
-    print(f"wrote {IMAGE_NAME} ({len(data)} bytes) to {dest}")
+    size = target.stat().st_size
+    print(f"wrote {SOURCE_NAME} ({size} bytes, sha256 {got}) to {out_dir}")
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    raise SystemExit(run())
